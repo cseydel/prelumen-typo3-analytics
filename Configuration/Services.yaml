@@ -1,0 +1,21 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Oneco\AnalyticsPro\Typo3\:
+    resource: '../Classes/*'
+
+
+  Oneco\AnalyticsPro\Typo3\Command\RefreshCommand:
+    tags:
+      - name: console.command
+        command: 'prelumen:refresh'
+        description: 'Refresh each connected Prelumen site with current entitlements'
+
+  Oneco\AnalyticsPro\Typo3\Service\ConnectionStore:
+    public: true
+
+  Oneco\AnalyticsPro\Typo3\Middleware\AnalyticsMiddleware:
+    public: true

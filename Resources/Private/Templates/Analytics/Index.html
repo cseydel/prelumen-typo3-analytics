@@ -1,0 +1,75 @@
+<!-- SPDX-License-Identifier: GPL-2.0-or-later -->
+<f:layout name="Module" />
+<f:section name="Content">
+    <f:flashMessages />
+    <h1>Prelumen Analytics</h1>
+    <f:for each="{sites}" as="site">
+        <section class="card mb-3">
+            <div class="card-header"><h2>{site.title}</h2></div>
+            <div class="card-body">
+                <f:if condition="{site.error}"><p class="alert alert-warning">{site.error}</p></f:if>
+                <f:if condition="{site.manual}"><f:if condition="{site.configured}"><p>Manual configuration remains active until you explicitly start account connection.</p></f:if></f:if>
+                <f:if condition="{site.saved}">
+                    <f:then>
+                        <p>Project: {site.siteId}</p>
+                        <f:if condition="{site.approvalUrl}"><a href="{site.approvalUrl}" target="_blank" rel="noopener noreferrer">Continue at Prelumen: account, organisation and project</a></f:if>
+                        <f:if condition="{site.expired}"><p>The request expired. Disconnect this pending request and start again.</p></f:if>
+                        <f:form action="connection" method="post">
+                            <f:form.hidden name="site" value="{site.identifier}" />
+                            <f:form.hidden name="formToken" value="{site.token}" />
+                            <f:if condition="{site.pending}"><f:then><f:form.button name="operation" value="complete" class="btn btn-primary">Complete connection</f:form.button></f:then>
+                            <f:else>
+                                <f:form.button name="operation" value="refresh" class="btn btn-default">Refresh results</f:form.button>
+                                <f:form.button name="operation" value="billing" class="btn btn-default">Upgrade or manage plan</f:form.button>
+                            </f:else></f:if>
+                            <f:form.button name="operation" value="disconnect" class="btn btn-default">Disconnect saved installation</f:form.button>
+                        </f:form>
+                        <p>Disconnecting stops local tracking. Encrypted recovery remains in this installation to preserve the website, history and plan without a new trial. Back up the database and TYPO3 encryption key together.</p>
+                    </f:then>
+                    <f:else>
+                        <p>Use your Prelumen account or register, then select or create an organisation and project and approve access. Passwords stay at Prelumen. Connecting transfers analytics to analytics.prelumen.com; metadata and commerce uploads remain disabled.</p>
+                        <f:form action="connection" method="post">
+                            <f:form.hidden name="site" value="{site.identifier}" />
+                            <f:form.hidden name="formToken" value="{site.token}" />
+                            <f:form.button name="operation" value="login" class="btn btn-primary">Use existing account</f:form.button>
+                            <f:form.button name="operation" value="register" class="btn btn-default">Create account</f:form.button>
+                            <f:if condition="{site.recovery}"><f:form.button name="operation" value="recovery" class="btn btn-default">Restore previous connection</f:form.button></f:if>
+                            <f:if condition="{site.configured}"><f:form.button name="operation" value="manual" class="btn btn-default">Use existing manual configuration</f:form.button><f:form.button name="operation" value="disconnect" class="btn btn-default">Disable tracking for this site</f:form.button></f:if>
+                        </f:form>
+                        <details>
+                            <summary>Manual API-key registration</summary>
+                            <p>Requires apiBaseUrl in Site Configuration. The API key is used only for this request.</p>
+                            <f:form action="register" method="post">
+                                <f:form.hidden name="site" value="{site.identifier}" />
+                                <f:form.hidden name="formToken" value="{site.token}" />
+                                <label for="apiKey-{site.identifier}">API key</label>
+                                <f:form.password name="apiKey" id="apiKey-{site.identifier}" additionalAttributes="{autocomplete: 'off'}" />
+                                <f:form.button class="btn btn-default">Register manually</f:form.button>
+                            </f:form>
+                        </details>
+                        <f:if condition="{site.dashboardUrl}"><a href="{site.dashboardUrl}" rel="noreferrer">Open manually configured analytics dashboard</a></f:if>
+                    </f:else>
+                </f:if>
+                <f:if condition="{site.active}">
+                    <f:then>
+                        <p>Current plan: <strong>{site.plan}</strong>. Organisation: {site.organisation}</p>
+                        <f:if condition="{site.trialEnds}"><p>Trial ends: {site.trialEnds}</p></f:if>
+                        <f:if condition="{site.free}"><p class="alert alert-info">Free includes visitor statistics. Daily checks and detailed findings are not included. Scores below are historical results, not new daily checks.</p></f:if>
+                        <f:if condition="{site.report}"><f:then>
+                            <p>Last retrieved: {site.fetchedAt}. Generated: {site.report.generated_at}. Period: {site.report.period.start} – {site.report.period.end} ({site.report.timezone}). Today is provisional; traffic excludes bots.</p>
+                            <f:if condition="{site.stale}"><p class="alert alert-warning">These results are older than one day. Refresh results or check the scheduled refresh job.</p></f:if>
+                            <p>Pageviews: <strong>{site.report.traffic.pageviews}</strong>. Visitors: <strong>{site.report.traffic.visitors}</strong>.</p>
+                            <p>Latest completed check: {site.report.last_check_at}</p>
+                            <table class="table"><thead><tr><th>Check</th><th>Score</th><th>Last checked</th></tr></thead><tbody>
+                                <f:for each="{site.report.checks}" as="check"><tr><td>{check.type}</td><td>{check.displayScore}</td><td>{check.checked_at}</td></tr></f:for>
+                            </tbody></table>
+                            <f:if condition="{site.findings}"><f:then><ul><f:for each="{site.report.issues}" as="issue"><li><strong>{issue.severity}</strong> — {issue.message}</li></f:for></ul><p>Missing findings do not confirm that all checks passed.</p></f:then><f:else><p>Detailed findings require a plan with this feature.</p></f:else></f:if>
+                        </f:then><f:else><p>Waiting for the first report. Refresh results to check progress.</p></f:else></f:if>
+                    </f:then>
+                    <f:else><f:if condition="{site.saved}"><p>Access is not currently confirmed. Reports remain hidden.</p></f:if></f:else>
+                </f:if>
+            </div>
+        </section>
+    </f:for>
+    <p>Footer badge is opt-in in Site Configuration. Cookie persistence requires an explicit consent signal. <a href="https://prelumen.com/en/privacy" rel="noreferrer">Privacy</a> · <a href="https://prelumen.com/en/tos" rel="noreferrer">Terms</a></p>
+</f:section>

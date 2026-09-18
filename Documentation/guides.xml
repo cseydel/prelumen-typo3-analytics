@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: GPL-2.0-or-later -->
+<guides xmlns="https://www.phpdoc.org/guides"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://www.phpdoc.org/guides https://raw.githubusercontent.com/phpDocumentor/guides/main/resources/schema/guides.xsd">
+    <extension class="T3Docs\Typo3DocsTheme\DependencyInjection\Typo3DocsThemeExtension"
+               project-name="Prelumen Analytics" project-version="0.1" />
+    <project title="Prelumen Analytics" />
+</guides>

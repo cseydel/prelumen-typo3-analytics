@@ -1,0 +1,16 @@
+prelumenAnalytics:
+  siteId: ''
+  apiBaseUrl: 'https://analytics.prelumen.com'
+  heartbeatEnabled: true
+  metadataPushEnabled: false
+  cookiePersistEnabled: false
+  excludedFrontendGroups: []
+  # Consent is a load-time cap decided client-side. Leave consentManaged false (no gating)
+  # to load the full script. Set consentManaged true and let your CMP call
+  # window.prelumenConsent('full'|'basic'|'none'); or set consentCookie to a cookie name whose
+  # value is full|basic|none and the plugin reads it for you.
+  consentManaged: false
+  consentCookie: ''
+
+  # Visible attribution; never enabled automatically.
+  footerBadgeEnabled: false

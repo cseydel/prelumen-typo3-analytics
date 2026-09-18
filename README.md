@@ -8,7 +8,7 @@ Require the extension with Composer; the release depends on stable `prelumen/ana
 
 Apply the TYPO3 database schema update (creates `tx_onecoanalyticspro_state`), flush system **and frontend page caches** once on upgrade to remove the previous cached listener output, and purge any reverse-proxy/CDN HTML cache. Existing manual `onecoAnalyticsPro` settings remain readable; new configurations use `prelumenAnalytics`. The public configuration example is in `Configuration/SiteConfiguration/config.example.yaml`.
 
-This implementation is Composer-only. A standalone non-Composer TER installation and bundled dependency delivery are not claimed. Keep extension metadata beta until the acceptance gates in `../../docs/TYPO3-PARITY.md` are closed.
+This implementation is Composer-only. A standalone non-Composer TER installation and bundled dependency delivery are not claimed.
 
 ## Connect each site
 
